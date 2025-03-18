@@ -17,5 +17,5 @@ This is my repo for *STATS 220*.
 
 A **meme** that captures how I currently feel about my university studies is
 
-![](https://media.tenor.com/pLnyMCjedUcAAAAM/alijah-martin-florida-basketball.gif)
+![](https://media1.tenor.com/m/EQwa0tqSUt8AAAAC/chicago-bulls-basketball.gif)
 
