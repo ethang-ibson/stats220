@@ -1,0 +1,116 @@
+---
+title: "Ad Watching: What Makes a good Ad?"
+output:
+  html_document:
+---
+
+```{=html}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+```
+
+```{js}
+$(function() {
+  $(".level2").css('visibility', 'hidden');
+  $(".level2").first().css('visibility', 'visible');
+  $(".container-fluid").height($(".container-fluid").height() + 300);
+  $(window).on('scroll', function() {
+    $('h2').each(function() {
+      var h2Top = $(this).offset().top - $(window).scrollTop();
+      var windowHeight = $(window).height();
+      if (h2Top >= 0 && h2Top <= windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'visible');
+      } else if (h2Top > windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'hidden');
+      }
+    });
+  });
+})
+```
+
+```{css}
+body {
+  background-color: #white;
+  color: #black;
+  font-family: sans-serif;
+}
+
+h2 {
+  color: #addd8e;
+  border-bottom: 2px solid #31a354;
+}
+h1 {
+  color: #31a354;
+}
+
+img {
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.figcaption {display: none}
+
+```
+
+## Introduction
+
+This visual data story explores how I interact with online ads. I recorded the ad type, ad duration, whether I skipped it, and how engaging I found it (rated 1–5) of every advertisement I encountered on YouTube over two days.
+
+I wanted to explore which types of ads are most common, when they appear, and how long or engaging they are.
+
+------------------------------------------------------------------------
+
+## When are ads most common?
+
+![](plotb.png){alt="Bar chart showing number of ads by hour of day. Most ads occurred between 1pm and 3pm."}
+
+I only recorded ad observations a couple hours over lunch. However, Most ads I encountered Where later in the afternoon, Mid afternoon. This suggests ad platforms target users during afternoon breaks or When younger users are finishing school.
+
+------------------------------------------------------------------------
+
+## Are long ads more engaging?
+
+![](plotp.png){alt="Scatter plot showing a mix of engagement ratings across all ad lengths. Long ads do not appear more engaging."}
+
+There’s no clear pattern between ad length and engagement. Both short and long ads received high and low engagement scores. However, it seems Longer ads are slightly more engaging, more longer ads have a higher engagement rating. This comes down to the fact that longer ads would take longer to get there point across and thus need to be engaging to get people watching more. Whereas shorter ads can just be reactive and get the point across straight away. In the end engagement is subjective and everyone would have a different opion on an ads engagement.
+
+------------------------------------------------------------------------
+
+## How do different ad types compare?
+
+![](plotbp.png){alt="Boxplot comparing engagement across ad categories. Service ads have the highest median engagement."}
+
+Service ads (like streaming platforms) had slightly higher engagement scores. Product ads were the most frequent but didn’t perform best.
+
+------------------------------------------------------------------------
+
+## Who skips what and Do longer ads get skipped more?
+
+![](plotden.png){alt="Density plot showing Common Ad Length and Skipping behaviour" width="80%"}
+
+Most long ads were skipped, while the rest were unable to be skipped. This is due to the fact that no individual would choose to watch an ad over 10 seconds. Unless the ad were unable to be skipped.
+
+![](plotp2.png){alt="Point plot faceted by skip status, showing engagement for short, medium, and long ads."}
+
+We can see that long ads tend to be skipped, but they don't necessarily have lower engagement. In fact, unskippable long ads sometimes show higher engagement. This is possibly due to the publisher knowing that there long ad is engaging but they know that poeple tend to skip long ads. So they make it unskippable due to the high engagement level people are less likely to complain.
+
+------------------------------------------------------------------------
+## How does skipping impact engagement?
+
+![](plotcol.png){alt="Column plot showing average engagement score by skip status. Unskippable ads have slightly Higher engagement."}
+
+This column plot summaries the average engagement for each skip type.
+
+This visualisation reinforces the idea that ads that are unable to be skipped are more engaging. They have the highest average engagement across all the skipping types.
+
+Surprisingly, skipped ads had slightly higher engagement scores than unskippable ones. This could suggest that the option to skip doesn’t always mean the viewer disengages they might still be interested until the decision to skip.
+
+## Summary
+
+This data shows how different ad characteristics influence engagement and skipping behaviour. By logging just a small sample of ads, I was able to reveal patterns in how and when ads are delivered, and how people react to them.
+
+This approach could be scaled up to larger data sets or more user groups to improve advertising strategies or understand population media consumption.
+
