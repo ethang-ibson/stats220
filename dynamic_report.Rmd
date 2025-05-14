@@ -1,0 +1,172 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+/* General body styling */
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f7f7f7;
+  margin: 20px;
+}
+
+/* Header styling */
+h1, h2, h3 {
+  color: #2c3e50;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Section titles (h2) */
+h2 {
+  border-bottom: 2px solid #2c3e50;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+/* Paragraph text */
+p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+```
+
+##  YouTube Advertisement Analysis
+
+This report tracks and analyzes YouTube advertisements, focusing on key variables such as the type of advertisements shown (Ad_Type), the length of advertisements shown (Ad_Length), whether individuals choose to skip the advertisements (Ad_Skipped) and the engagement levels of the advertisements to be (Ad_Engaged). The goal is to provide insights into how different advertisement types and characteristics influence viewer engagement and interaction, helping to understand ad performance across various metrics.
+
+
+```{r, echo=FALSE}
+library(tidyverse)
+
+logged_data  <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQQSF3f45kWWR-spYlDLPZ6OOXZuDwSaTNyutQWj_ej8fKHdr9RE--fnIKmUCvDPugwLdZa9J3Dbb_1/pub?gid=2013861753&single=true&output=csv")
+
+
+    latest_data <- logged_data %>%
+      rename(
+        Ad_Type = 'What type of ad did you encounter?',
+        Ad_Length = 'How long was the Advertisment?',
+        Ad_Skipped = 'Did you skip the advetisment?',
+        Ad_Engaged = 'How engaging was the advertisment?'
+      )
+
+# New data frame between Ad type and their engagement
+Ad_TE <- latest_data %>%
+  select(Ad_Type, Ad_Engaged)
+
+# New data frame between Ad length and their engagement
+Ad_LE <- latest_data %>%
+  select(Ad_Length, Ad_Engaged)
+
+# New data frame between Ad length and their engagement
+Ad_TL <- latest_data %>%
+  select(Ad_Type, Ad_Length)
+
+```
+
+
+```{r, echo=FALSE}
+# Bar chart for Ad_Type (count of ad types)
+ggplot(latest_data, aes(x = Ad_Type)) +
+  geom_bar(fill = "springgreen") +
+  labs(title = "Ad Types", x = "Ad Type", y = "Count")
+
+# Bar chart for Skipped_Ad (count of whether users skipped the ad)
+ggplot(latest_data, aes(x = Ad_Skipped)) +
+  geom_bar(fill = "slategrey") +
+  labs(title = "Ad Skipping Behavior",
+       x = "Skipped Ad",
+       y = "Count"
+  )
+```
+
+**Mean Ad Length:** `r round(mean(latest_data$Ad_Length), 2)` seconds  
+**Median Ad Length:** `r round(median(latest_data$Ad_Length), 2)` seconds
+
+```{r, echo=FALSE}
+
+# Scatter plot: Ad length and Ad Type
+ggplot(Ad_TL, aes(y = Ad_Length, x = Ad_Type)) +
+  geom_point(color = "cadetblue", size = 3) +
+  labs(
+    title = "Relationship between Ad Length and Ad Type",
+    x = "Ad Type",
+    y = "Ad Length (seconds)"
+  )
+```
+
+**Average Engagement Score:** `r round(mean(Ad_TE$Ad_Engaged), 2)`  
+**Most Frequent Engagement Score:** `r as.numeric(names(sort(table(Ad_TE$Ad_Engaged), decreasing = TRUE))[1])`
+
+```{r, echo=FALSE}
+# Bar chart: Distribution of Ad Engagement (on a 1-5 scale)
+print(engagement_chart <- ggplot(Ad_TE, aes(x = factor(Ad_Engaged))) +
+  geom_bar(fill = "orange") +
+  labs(
+    title = "Ad Engagement",
+    x = "Engagement (1-5)",
+    y = "Count",
+  ))
+
+mean_E_T <- latest_data %>%
+  group_by(Ad_Type) %>%
+  summarise(mean_engagement = mean(Ad_Engaged))
+```
+
+The mean engagement score for **Health and Wellbeing Advertisments** is `r round(mean_E_T$mean_engagement[mean_E_T$Ad_Type == "Health and Wellbeing Advertisments"], 2)`.
+
+The mean engagement score for **Product Advertisment** is `r round(mean_E_T$mean_engagement[mean_E_T$Ad_Type == "Product Advertisment (Clothing, Food, etc)"], 2)`.
+
+The mean engagement score for **Service Advertisement** is `r round(mean_E_T$mean_engagement[mean_E_T$Ad_Type == "Service Advertisment (Streaming Platforms, etc)"], 2)`.
+
+
+```{r, echo=FALSE}
+
+# Scatter plot: Ad Engagement and Ad Type
+ggplot(Ad_TE, aes(y = Ad_Engaged, x = Ad_Type)) +
+  geom_point(color = "coral3", alpha = 0.5, size = 2) +
+  labs(
+    title = "Relationship between Ad engagement and Ad Type",
+    x = "Ad Type",
+    y = "Ad Engagememt (1-5)"
+  )
+
+# Scatter plot between Ad Length and Ad Engaged
+ggplot(Ad_LE, aes(x = Ad_Length, y = Ad_Engaged)) +
+  geom_point(color = "slateblue4", alpha = 0.5, size = 2) +  
+  labs(
+    title = "Ad engagment based on length",
+    x = "Ad Length (seconds)",
+    y = "Ad Engagement (1-5)",
+  )
+```
